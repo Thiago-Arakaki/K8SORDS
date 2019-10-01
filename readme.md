@@ -19,7 +19,7 @@ This Workshop will cover the creation of a infraestructure using Oracle Cloud In
 
 * [Lab 040](lab40/lab40.md) - Create a Github, a Wercker and a Oracle Cloud Infraestructure Account.
 * [Lab 100](lab100/lab100.md) - Create a simple infraestrucutre using Oracle Resource Manager (Terraform).
-* [Lab 200](lab200/lab200md) - Create a Oracle Autonomous Database Instance and enable Oracle REST Data Service.
+* [Lab 200](lab200/lab200.md) - Create a Oracle Autonomous Database Instance and enable Oracle REST Data Service.
 * [Lab 250](lab250/lab250.md) - Quick guide on how to use Oracle Rest Data Service noSQL features (SODA).
 * [Lab 300](lab300/lab300.md) - Create a new application and contenerize it using Oracle Container Pipelines (Wercker).
 * [Lab 400](lab400/lab400.md) - Deploy the newly created application on the OKE cluster using Oracle Container Pipelines.
