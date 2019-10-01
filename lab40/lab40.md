@@ -1,0 +1,154 @@
+# Criando e acessando contas Git, Wercker e Oracle Cloud
+
+To walk through this workshop, in addition to the Oracle Cloud account, you will need to have a Github account, that will also allow you to connect directly to Wercker. Both will be used intensively. We will show how to register and login those services.
+
+## Oracle Cloud Account
+
+### Signing Up for Oracle Cloud Infrastructure
+
+You can sign up for Oracle Cloud Infrastructure in the following ways:
+
+* Contact your Oracle sales representative.
+  * Your Oracle sales representative can provide you information about the pricing options available to your company.
+* Go to [https://cloud.oracle.com/tryit](https://cloud.oracle.com/tryit) and sign up for the Free Oracle Cloud Promotion.
+  When your request is processed, you will be provisioned a tenancy in Oracle Cloud Infrastructure. Oracle will send you a Welcome email with instructions for signing in to the Console for the first time. There is no charge unless you choose to Upgrade to Paid from My Services.
+
+### Signing In to the Console
+
+You can understand better the sign-in options [here](https://docs.cloud.oracle.com/iaas/Content/GSG/Concepts/signinoptions.htm) and have more information about the sign-in [here](https://docs.cloud.oracle.com/iaas/Content/GSG/Tasks/signingin.htm).
+
+To sign in to Oracle Cloud at <https://cloud.oracle.com>, you need:
+
+* User name and password
+* Your cloud account name
+
+When your tenancy is provisioned, Oracle sends an email to the default administrator at your company with the sign-in credentials and URL. This administrator can then create a user for each person who needs access to Oracle Cloud Infrastructure. Check your email or contact your administrator for your credentials and account name.
+
+The direct links for signing in are provided in your welcome email, but you can also follow the instructions bellow:
+
+* Open a supported browser and go to <https://cloud.oracle.com>.
+* Click Sign In.
+* Enter your Cloud Account Name and click Next.
+* Enter your user name and temporary password from your welcome email. You will be prompted to change your temporary password.
+
+After you sign in, the Console Home page is displayed.
+
+Alternatively, you can sign in directly to Oracle Cloud Infrastructure using the Console URL. When you sign up to use Oracle Cloud Infrastructure, you receive a customized URL for your organization. For example,
+
+    https://console.us-ashburn-1.oraclecloud.com/?tenant=CompanyABC
+
+If you instead use the base URL (<https://console.us-ashburn-1.oraclecloud.com> - verify your home region: it's ashburn in this example), you are prompted to specify your tenant (or cloud account name) on the sign-in page, along with your user name and password.
+
+## Github Account
+
+### What's GitHub
+
+According to themselves:
+> GitHub is a development platform inspired by the way you work. From open source to business, you can host and review code, manage projects, and build software alongside 40 million developers.
+
+In this workshop, we will basically use your personal account to [fork a repo](https://help.github.com/en/articles/fork-a-repo), edit some Java code and sign in and integrate to Wercker.
+
+> A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
+
+GitHub can do much more, but we will use only the colaborative code repository feature.
+
+### Creating a free account on GitHub
+
+Access the sign-up web page <https://github.com/join>.
+
+Fill the form with your information.
+
+![GitHub](images/github01.png)
+
+Choose the Free subscription.
+
+![GitHub](images/github02.png)
+
+Now you have to verify you e-mail address.
+
+![GitHub](images/github03.png)
+
+![GitHub](images/github04.png)
+
+Let's get started with the Wercker account configuration.
+
+## Wercker Account
+
+### What's Wercker
+
+Wercker is an enterprise acquired by Oracle in 2017. [The official note explains](https://www.oracle.com/corporate/acquisitions/wercker/):
+
+> Wercker empowers organizations and their development teams to achieve continuous integration and continuous delivery (CI/CD) goals with micro-services and Docker. This is brought to life through Wercker’s container-centric and cloud-native automation platform comprised of their local command line interface (CLI), online SaaS platform and API.
+>
+>
+> Oracle and Wercker share the view that developers greatly benefit from focusing on building great products and applications. Oracle is building a leading IaaS and PaaS platform as the foundation for a new generation of cloud computing. A leading cloud needs great tooling and adding Wercker’s container lifecycle management to Oracle’s Cloud provides engineering teams with the developer experience they deserve to build, launch and scale their applications. Together, Oracle and Wercker will democratize developer tooling for the modern cloud.
+
+At the official web site, you can find more information about [Wercker Features](https://devcenter.wercker.com/overview-and-core-concepts/wercker-features/) and a complete [Wercker Glossary](https://devcenter.wercker.com/supplementary-information/wercker-glossary/).
+
+### Acessing a Wercker free account
+
+You can understand better the sign-up and sign-in options [here](https://devcenter.wercker.com/introductions/create-account/).
+
+Access the sign-up web page <https://app.wercker.com/users/new>.
+
+Select the "SIGN UP USING GITHUB" option.
+
+![Wercker](images/wercker01.png)
+
+Provide your GitHub account login information.
+
+![Wercker](images/wercker02.png)
+
+Authorize Wercker to connect to GitHub.
+
+![Wercker](images/wercker03.png)
+
+Inform the username and the e-mail address you want to associate to your new Wercker account.
+
+![Wercker](images/wercker04.png)
+
+Prove you are not a robot.
+
+![Wercker](images/wercker05.png)
+
+Now you are ready to use Wercker, but we will get back here soon.
+
+![Wercker](images/wercker06.png)
+
+## Accessing your Oracle Cloud Account)
+
+## Accessing your Oracle Cloud Account)
+
+### Accessing the OCI Console
+
+To sign in to your Tenancy anytime (before you have changed your password), you can follow the instruction bellow:
+
+Open a supported browser and go to <https://cloud.oracle.com>.
+
+![OCI](images/oci01.png)
+
+Click the **Sign In to Cloud** button.
+
+![OCI](images/oci02.png)
+
+Enter your Cloud Account Name and click the **Next** button.
+
+![OCI](images/oci03.png)
+
+Enter your user name and password and click the **Sign In** button.
+
+![OCI](images/oci04.png)
+
+Your console interface will start loading.
+
+![OCI](images/oci05.png)
+
+After you sign in, the Platform Console Home page is displayed.
+
+![OCI](images/oci07.png)
+
+Click on Infraestructure on the top of the page to go to the OCI console
+
+![OCI](images/oci06.png)
+
+Now you are ready to do the next lab.
