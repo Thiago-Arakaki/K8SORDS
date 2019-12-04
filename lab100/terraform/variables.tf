@@ -33,9 +33,8 @@ variable "instance_image_ocid" {
 }
 
 variable "instance_shape" {
-  description = "The shape of the Bastion Host compute instance"
-  type = "list"
-  default = ["VM.Standard2.2","VM.Standard.E2.2"]
+  description = "The shape of the Bastion Host compute instance. Choose between VM.Standard2.2 or VM.Standard.E2.2"
+  default = "VM.Standard2.2"
 }
 
 variable "availability_domains" {
