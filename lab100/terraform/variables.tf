@@ -34,7 +34,8 @@ variable "instance_image_ocid" {
 
 variable "instance_shape" {
   description = "The shape of the Bastion Host compute instance"
-  default = "VM.Standard2.2"
+  type = "list"
+  default = ["VM.Standard2.2","VM.Standard.E2.2"]
 }
 
 variable "availability_domains" {
@@ -61,6 +62,3 @@ variable "ssh_public_key_pem_path" {
   default = "./ssh-keys/oci_api_key_public.pem"
 }
 
-variable "db_password" {
-    description = "This is the password for your admin account on the database"
-}
