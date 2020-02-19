@@ -4,7 +4,9 @@ resource "oci_identity_policy" "allow_oke_policy" {
     name = "oke-policy"
     statements = ["allow service OKE to manage all-resources in tenancy"]
 }
-
+data "oci_identity_availability_domains" "availability_domains" {
+  compartment_id = "${oci_identity_compartment.oke_compartment.id}"
+}
 resource "oci_identity_compartment" "oke_compartment" {
     compartment_id = "${var.tenancy_ocid}"
     description = "Workshop Compartment"

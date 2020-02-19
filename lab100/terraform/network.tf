@@ -1,107 +1,137 @@
-/* Network */
-data "oci_identity_availability_domains" "availability_domains" {
+# https://www.terraform.io/docs/configuration/resources.html
+# https://www.terraform.io/docs/providers/oci/r/core_vcn.html
+resource "oci_core_vcn" "oke_vcn" {
+  #Required
+  cidr_block     = "${lookup(var.network_cidrs, "vcnCIDR")}"
   compartment_id = "${oci_identity_compartment.oke_compartment.id}"
+ 
+  #Optional
+  dns_label    = "vcn1"
+  display_name = "oke-vcn"
 }
-
-############################################
-# Local variables
-############################################
-
-locals {
-  tcp_protocol = "6"
-  all_protocol = "all"
-  anywhere = "0.0.0.0/0"
-}
-
-############################################
-# Create VCN
-############################################
-
-resource "oci_core_vcn" "vcn-workshop" {
-  cidr_block = "${var.vcn_cidr}"
+ 
+# https://www.terraform.io/docs/providers/oci/r/core_security_list.html
+resource "oci_core_security_list" "oke_sl" {
+  #Required
   compartment_id = "${oci_identity_compartment.oke_compartment.id}"
-  dns_label = "vcnworkshop"
-}
-
-############################################
-# Create Internet Gateway
-############################################
-
-resource "oci_core_internet_gateway" "ig-workshop" {
-  compartment_id = "${oci_core_vcn.vcn-workshop.compartment_id}"
-  vcn_id = "${oci_core_vcn.vcn-workshop.id}"
-}
-
-############################################
-# Create Route Table
-############################################
-
-resource "oci_core_route_table" "routetable" {
-  compartment_id = "${oci_core_vcn.vcn-workshop.compartment_id}"
-  vcn_id = "${oci_core_vcn.vcn-workshop.id}"
-  display_name = "Bastion Route Table"
-
-  route_rules {
-    destination = "${local.anywhere}"
-//    destination_type = "CIDR_BLOCK"
-    network_entity_id = "${oci_core_internet_gateway.ig-workshop.id}"
-  }
-}
-
-############################################
-# Create Security List
-############################################
-
-resource "oci_core_security_list" "securitylist" {
-  display_name = "Bastion Security List"
-  compartment_id = "${oci_core_vcn.vcn-workshop.compartment_id}"
-  vcn_id = "${oci_core_vcn.vcn-workshop.id}"
-
+  vcn_id         = "${oci_core_vcn.oke_vcn.id}"
+ 
   egress_security_rules = [
     {
-      protocol = "${local.all_protocol}"
-      destination = "${local.anywhere}"
-    }
+      destination = "0.0.0.0/0"
+      protocol    = "all"
+    },
   ]
-
+ 
   ingress_security_rules = [
     {
-      protocol = "${local.tcp_protocol}"
-      source = "${local.anywhere}"
-
-      tcp_options {
-        "min" = 22
-        "max" = 22
-      }
+      protocol = "all"
+      source   = "0.0.0.0/0"
     },
-    {
-      protocol = "${local.tcp_protocol}"
-      source = "${local.anywhere}"
-
-      tcp_options {
-        "min" = 5900
-        "max" = 5967
-      }
-    }
   ]
+ 
+  #Optional
+  display_name = "oke-sl"
 }
-
-
-############################################
-# Create Subnet
-############################################
-resource "oci_core_subnet" "sub01" {
-  display_name = "sub01"
-//  availability_domain = "${lookup(data.oci_identity_availability_domains.availability_domains.availability_domains[var.availability_domains -2],"name")}"
-  cidr_block = "${var.sub_01}"
-  dns_label = "sub01"
-  security_list_ids = ["${oci_core_security_list.securitylist.id}"]
-  compartment_id = "${oci_core_vcn.vcn-workshop.compartment_id}"
-  vcn_id = "${oci_core_vcn.vcn-workshop.id}"
-  route_table_id = "${oci_core_route_table.routetable.id}"
-  dhcp_options_id = "${oci_core_vcn.vcn-workshop.default_dhcp_options_id}"
-
-  provisioner "local-exec" {
-    command = "sleep 5"
+ 
+# https://www.terraform.io/docs/providers/oci/r/core_internet_gateway.html
+resource "oci_core_internet_gateway" "oke_ig" {
+  #Required
+  compartment_id = "${oci_identity_compartment.oke_compartment.id}"
+  vcn_id         = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  enabled      = "${var.internet_gateway_enabled}"
+  display_name = "oke-gateway"
+}
+ 
+# https://www.terraform.io/docs/providers/oci/r/core_route_table.html
+resource "oci_core_route_table" "oke_rt" {
+  #Required
+  compartment_id = "${oci_identity_compartment.oke_compartment.id}"
+  vcn_id         = "${oci_core_vcn.oke_vcn.id}"
+ 
+  route_rules {
+    destination       = "0.0.0.0/0"
+    network_entity_id = "${oci_core_internet_gateway.oke_ig.id}"
   }
+ 
+  #Optional
+  display_name = "oke-rt"
+}
+ 
+# https://www.terraform.io/docs/providers/oci/r/core_subnet.html
+resource "oci_core_subnet" "workerSubnetAD1" {
+  #Required
+  cidr_block        = "${lookup(var.network_cidrs, "workerSubnetAD1")}"
+  compartment_id    = "${oci_identity_compartment.oke_compartment.id}"
+  security_list_ids = ["${oci_core_security_list.oke_sl.id}"]
+  vcn_id            = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0], "name")}"
+  dhcp_options_id     = "${oci_core_vcn.oke_vcn.default_dhcp_options_id}"
+  display_name        = "workerSubnetAD1"
+  dns_label           = "worker1"
+  route_table_id      = "${oci_core_route_table.oke_rt.id}"
+}
+ 
+resource "oci_core_subnet" "workerSubnetAD2" {
+  #Required
+  cidr_block        = "${lookup(var.network_cidrs, "workerSubnetAD2")}"
+  compartment_id    = "${oci_identity_compartment.oke_compartment.id}"
+  security_list_ids = ["${oci_core_security_list.oke_sl.id}"]
+  vcn_id            = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1], "name")}"
+  dhcp_options_id     = "${oci_core_vcn.oke_vcn.default_dhcp_options_id}"
+  display_name        = "workerSubnetAD2"
+  dns_label           = "worker2"
+  route_table_id      = "${oci_core_route_table.oke_rt.id}"
+}
+ 
+resource "oci_core_subnet" "workerSubnetAD3" {
+  #Required
+  cidr_block        = "${lookup(var.network_cidrs, "workerSubnetAD3")}"
+  compartment_id    = "${oci_identity_compartment.oke_compartment.id}"
+  security_list_ids = ["${oci_core_security_list.oke_sl.id}"]
+  vcn_id            = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2], "name")}"
+  dhcp_options_id     = "${oci_core_vcn.oke_vcn.default_dhcp_options_id}"
+  display_name        = "workerSubnetAD3"
+  dns_label           = "worker3"
+  route_table_id      = "${oci_core_route_table.oke_rt.id}"
+}
+ 
+resource "oci_core_subnet" "LoadBalancerSubnetAD1" {
+  #Required
+  cidr_block        = "${lookup(var.network_cidrs, "LoadBalancerSubnetAD1")}"
+  compartment_id    = "${oci_identity_compartment.oke_compartment.id}"
+  security_list_ids = ["${oci_core_security_list.oke_sl.id}"]
+  vcn_id            = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0], "name")}"
+  dhcp_options_id     = "${oci_core_vcn.oke_vcn.default_dhcp_options_id}"
+  display_name        = "LoadBalancerSubnetAD1"
+  dns_label           = "loadbalancer1"
+  route_table_id      = "${oci_core_route_table.oke_rt.id}"
+}
+ 
+resource "oci_core_subnet" "LoadBalancerSubnetAD2" {
+  #Required
+  cidr_block        = "${lookup(var.network_cidrs, "LoadBalancerSubnetAD2")}"
+  compartment_id    = "${oci_identity_compartment.oke_compartment.id}"
+  security_list_ids = ["${oci_core_security_list.oke_sl.id}"]
+  vcn_id            = "${oci_core_vcn.oke_vcn.id}"
+ 
+  #Optional
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1], "name")}"
+  dhcp_options_id     = "${oci_core_vcn.oke_vcn.default_dhcp_options_id}"
+  display_name        = "LoadBalancerSubnetAD1"
+  dns_label           = "loadbalancer2"
+  route_table_id      = "${oci_core_route_table.oke_rt.id}"
 }

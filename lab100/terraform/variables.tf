@@ -1,12 +1,56 @@
-variable "region" {}
-
-variable "tenancy_ocid" {}
 
 variable "compartment_ocid" {}
 
-#It's not a best practice to have de User OCID as a variable - Workshop use only
-variable "user_id" {
-  description = "Your User OCID"
+variable "region" {}
+
+variable "tenancy_ocid" {}
+ 
+variable "ssh_public_key_pub" {
+  description = "Public PUB Key to use in Bastion Host compute instance"
+  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHX7WQWmFGqyO8RLktNUFfaAnyP1+Nlf7wAeclf6m+3H7JHygpGLIuuQw7GXMHH86/IwkxbO62TcLPTr99wO/h8WnreiILWr+v5vmoMKq0BcSPt57Qclpdq2KbhivYaBfoM4TK1tyMSsqnXbmtlhBbdPpz6MXkSLhsiZHKaxT1435ZwW5l4poC481d1/XI7iikEno7rvvTRyL4vC7xoqkWeNexEVb2uDD4zkYxgoobMjFdk9M4TDSxbkoTMb9SbLbR+980Dte2ccgaduN7JsZWIqjDMlkjDOqnN4NxR5zpGaOVnqDD7F6naB4N26SCC8pbl9X2SL5/VDaqYuCTCO8j imported-openssh-key"
+}
+
+variable "ssh_public_key_pem_path" {
+  description = "Public PEM Key path to use for user login in tenancy"
+  default = "./ssh-keys/oci_api_key_public.pem"
+}
+ 
+# Choose an Availability Domain
+variable "availability_domains" {
+  default = "3"
+}
+
+variable "user_id" {}
+ 
+variable "internet_gateway_enabled" {
+  default = "true"
+}
+ 
+variable "worker_ol_image_name" {
+  default = "Oracle-Linux-7.5"
+}
+ 
+variable "oke" {
+  type = "map"
+  default = {
+    name             = "oke",
+    version          = "v1.13.5",
+    shape            = "VM.Standard2.1",
+    nodes_per_subnet = 1
+  }
+}
+ 
+variable "network_cidrs" {
+  type = "map"
+  default = {
+    vcnCIDR               = "10.0.0.0/16",
+    workerSubnetAD1       = "10.0.10.0/24",
+    workerSubnetAD2       = "10.0.11.0/24",
+    workerSubnetAD3       = "10.0.12.0/24",
+    LoadBalancerSubnetAD1 = "10.0.20.0/24",
+    LoadBalancerSubnetAD2 = "10.0.21.0/24",
+    LoadBalancerSubnetAD3 = "10.0.22.0/24",
+  }
 }
 
 variable "instance_image_ocid" {
@@ -31,33 +75,3 @@ variable "instance_image_ocid" {
     us-phoenix-1="ocid1.image.oc1.phx.aaaaaaaadtmpmfm77czi5ghi5zh7uvkguu6dsecsg7kuo3eigc5663und4za"
   }
 }
-
-variable "instance_shape" {
-  description = "The shape of the Bastion Host compute instance. Choose between VM.Standard2.2 or VM.Standard.E2.2"
-  default = "VM.Standard2.2"
-}
-
-variable "availability_domains" {
-  default = "3"
-}
-
-variable "vcn_cidr" {
-  description = "Virtual Cloud Network (VLAN): 192.168.0.0 - 192.168.255.255"
-  default = "192.168.0.0/16"
-}
-
-variable "sub_01" {
-  description = "Subnet for our Bastion Host: 192.168.1.0 - 192.168.1.255"
-  default = "192.168.1.0/24"
-}
-
-variable "ssh_public_key_pub" {
-  description = "Public PUB Key to use in Bastion Host compute instance"
-  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHX7WQWmFGqyO8RLktNUFfaAnyP1+Nlf7wAeclf6m+3H7JHygpGLIuuQw7GXMHH86/IwkxbO62TcLPTr99wO/h8WnreiILWr+v5vmoMKq0BcSPt57Qclpdq2KbhivYaBfoM4TK1tyMSsqnXbmtlhBbdPpz6MXkSLhsiZHKaxT1435ZwW5l4poC481d1/XI7iikEno7rvvTRyL4vC7xoqkWeNexEVb2uDD4zkYxgoobMjFdk9M4TDSxbkoTMb9SbLbR+980Dte2ccgaduN7JsZWIqjDMlkjDOqnN4NxR5zpGaOVnqDD7F6naB4N26SCC8pbl9X2SL5/VDaqYuCTCO8j imported-openssh-key"
-}
-
-variable "ssh_public_key_pem_path" {
-  description = "Public PEM Key path to use for user login in tenancy"
-  default = "./ssh-keys/oci_api_key_public.pem"
-}
-
